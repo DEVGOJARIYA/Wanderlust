@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
+
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -9,18 +10,21 @@ import { PORT } from './config/utils.js';
 import authRouter from './routes/auth.js';
 import postsRouter from './routes/posts.js';
 // import { connectToRedis } from './services/redis.js';
+
 const app = express();
 const port = PORT || 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const corsOrigin = process.env.CORS_ORIGIN;
+
+// 🚨 Open CORS: Allow all origins
 app.use(cors({
-    origin: corsOrigin,
+    origin: true, // Reflects request origin automatically
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204,
 }));
+
 app.use(cookieParser());
 app.use(compression());
 
@@ -37,12 +41,14 @@ app.use('/api/auth', authRouter);
 app.get('/', (req, res) => {
   res.send('Yay!! Backend of wanderlust app is now accessible');
 });
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Backend is healthy' });
 });
+
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(Server is running on port ${port});
 });
 
 export default app;
